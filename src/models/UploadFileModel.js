@@ -110,7 +110,7 @@ class UploadFileModel {
     */
     checkProcessingStatus(request_id) {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT count(*) as countProcess,status FROM spyne_img.csv_processing_requests where request_id = ?';
+            const query = 'SELECT count(*) as countProcess,status FROM csv_processing_requests where request_id = ?';
             this.connection.query(query, [request_id], (error, result) => {
                 if (error) {
                     console.error("Error selected data processing request:", error);
@@ -133,9 +133,9 @@ class UploadFileModel {
         return new Promise((resolve, reject) => {
             const query = `
                 SELECT pr.request_id, cp.product_name, cpi.product_image_url, cpi.product_compressed_image_url
-                FROM spyne_img.csv_processing_requests AS pr
-                INNER JOIN spyne_img.csv_products AS cp ON pr.request_id = cp.request_id
-                INNER JOIN spyne_img.csv_product_images AS cpi ON cp.id = cpi.product_id
+                FROM csv_processing_requests AS pr
+                INNER JOIN csv_products AS cp ON pr.request_id = cp.request_id
+                INNER JOIN csv_product_images AS cpi ON cp.id = cpi.product_id
                 WHERE pr.request_id = ?
             `;
             this.connection.query(query, [request_id], (error, result) => {
