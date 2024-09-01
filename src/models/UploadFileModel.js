@@ -114,7 +114,7 @@ class UploadFileModel {
             this.connection.query(query, [request_id], (error, result) => {
                 if (error) {
                     console.error("Error selected data processing request:", error);
-                    return eject(result[0].count);
+                    return reject(result[0].count);
                 } 
                 resolve(result[0].status);
             });
