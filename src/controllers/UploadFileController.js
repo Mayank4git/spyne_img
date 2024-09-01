@@ -11,7 +11,6 @@ const CSV_FAILURE = 2;
 const CSV_PROCESSING = 0;
 
 class UploadFileController {
-
 	constructor(){
         this.UploadFileModelObj = new uploadFileModel();
     }
@@ -21,6 +20,7 @@ class UploadFileController {
     * @return object
     */
     async UploadCSVFile(req, res){
+
         let requestBody = req.files;
         let resultData = {};
         if(requestBody == "" || requestBody == undefined){
@@ -28,12 +28,25 @@ class UploadFileController {
             resultData.mssg = "No file uploaded. Please upload a CSV file.";
             return res.status(400).send(resultData);
         }
+
         if(path.extname(req.files[0].originalname) != ".csv"){
             resultData.status = "400";
             resultData.mssg = "Please upload a CSV file only.";
             fs.unlinkSync(req.files[0].path);
             return res.status(400).send(resultData);
         }
+
+        if (requestBody.length > 1) {
+            resultData.status = "400";
+            resultData.mssg = "Only one CSV file is allowed.";
+            requestBody.forEach(file => {
+                if (fs.existsSync(file.path)) {
+                    fs.unlinkSync(file.path);
+                }
+            });
+            return res.status(400).send(resultData);
+        }
+
         let requestId = uuidv4();
         requestId = requestId.replace(/-/g, '').slice(0, 12);
         let csvFileName = req.files[0].originalname;
@@ -49,7 +62,7 @@ class UploadFileController {
                     let insertedProductId = await this.UploadFileModelObj.insertIntoProductTable(requestId,row[1]);
                     var storedPath = "";
                     if(insertedProductId){
-                        const urls = row[2].split(',');
+                        const urls = row[2].includes(',') ? row[2].split(',') : [row[2]];
                         for (let url of urls) {
                             let response = await axios({ url, responseType: 'arraybuffer' });
                             let imageBuffer = Buffer.from(response.data, 'binary');
@@ -59,13 +72,9 @@ class UploadFileController {
                                     .quality(80)
                                     .getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
                                         if (err) return reject(err);
-
-                                        // Extract the original filename and generate the new filename
                                         let originalFilename = path.basename(url);
                                         let compressedFilename = 'comp-' + Date.now() + "-" + originalFilename;
                                         let root = path.dirname(require.main.filename);
-
-                                        // Save to /src/uploads/compressed/
                                         let outputDir = path.join(root, "src/uploads/compressedImages/");
                                         let outputFilePath = path.join(outputDir, compressedFilename);
                                         fs.writeFileSync(outputFilePath, buffer);
@@ -89,7 +98,7 @@ class UploadFileController {
                 }
             });
         }else{
-                await this.UploadFileModelObj.updateProcessingRequestId(CSV_FAILURE,requestId); //failue case
+            await this.UploadFileModelObj.updateProcessingRequestId(CSV_FAILURE,requestId); //failue case
         }
     }
 
