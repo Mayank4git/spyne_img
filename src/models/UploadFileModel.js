@@ -114,7 +114,7 @@ class UploadFileModel {
             this.connection.query(query, [request_id], (error, result) => {
                 if (error) {
                     console.error("Error selected data processing request:", error);
-                    return reject(result[0].countProcess);
+                    reject(result[0].countProcess);
                 }else{
                     resolve(result[0].status);
                 }
@@ -141,14 +141,14 @@ class UploadFileModel {
             this.connection.query(query, [request_id], (error, result) => {
                 if (error) {
                     console.error("Error selecting data processing request:", error);
-                    return reject(error);
+                    reject(error);
                 }
                 if (result.length > 0) {
                     console.log("Selected data successfully:", result);
-                    return resolve(result);
+                    resolve(result);
                 } else {
                     console.log("No matching record found.");
-                    return resolve(null);
+                    resolve(null);
                 }
             });
         });
