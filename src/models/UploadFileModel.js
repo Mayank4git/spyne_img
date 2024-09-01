@@ -121,5 +121,37 @@ class UploadFileModel {
         });
     }
 
+    /** 
+    * getProcessingData requestBody into the database
+    * 
+    * @method getProcessingData
+    * @param {string} request_id - Unique request ID
+    * @return {Promise} - Resolves with the result of the database insertion
+    */
+    getProcessingData(request_id) {
+        return new Promise((resolve, reject) => {
+            const query = `
+                SELECT pr.request_id, cp.product_name, cpi.product_image_url, cpi.product_compressed_image_url
+                FROM spyne_img.csv_processing_requests AS pr
+                INNER JOIN spyne_img.csv_products AS cp ON pr.request_id = cp.request_id
+                INNER JOIN spyne_img.csv_product_images AS cpi ON cp.id = cpi.product_id
+                WHERE pr.request_id = ?
+            `;
+            this.connection.query(query, [request_id], (error, result) => {
+                if (error) {
+                    console.error("Error selecting data processing request:", error);
+                    return reject(error);
+                }
+                if (result.length > 0) {
+                    console.log("Selected data successfully:", result);
+                    return resolve(result);
+                } else {
+                    console.log("No matching record found.");
+                    return resolve(null);
+                }
+            });
+        });
+    }
+
 }
 module.exports = UploadFileModel;
