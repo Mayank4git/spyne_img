@@ -110,13 +110,14 @@ class UploadFileModel {
     */
     checkProcessingStatus(request_id) {
         return new Promise((resolve, reject) => {
-            const query = 'SELECT count(*) as count,status FROM spyne_img.csv_processing_requests where request_id = ?';
+            const query = 'SELECT count(*) as countProcess,status FROM spyne_img.csv_processing_requests where request_id = ?';
             this.connection.query(query, [request_id], (error, result) => {
                 if (error) {
                     console.error("Error selected data processing request:", error);
-                    return reject(result[0].count);
-                } 
-                resolve(result[0].status);
+                    return reject(result[0].countProcess);
+                }else{
+                    resolve(result[0].status);
+                }
             });
         });
     }
