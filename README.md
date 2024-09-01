@@ -57,3 +57,15 @@ CREATE TABLE csv_product_images (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
+
+### Hosted on render server so according i am providing APIs:
+##Upload API:
+curl --location --request POST 'https://spyne-img-1.onrender.com/api/uploadCSV' \
+--form 'csvFile=@"/home/momoe/Desktop/product_image.csv"'
+
+## checkStatus API :
+curl --location --request GET 'https://spyne-img-1.onrender.com/api/csvStatus' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "request_id":"3388f9a8917e"
+}'
