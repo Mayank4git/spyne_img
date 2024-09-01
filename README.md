@@ -20,7 +20,10 @@ Clone this repository to your local machine using the following command:
 ```bash
 git clone https://github.com/your-username/your-repo-name.git
 
-### 2. Install Dependencies
+### 2. Install Dependencies using
+npm install
+in case if you dont have specific package then
+npm install <package_name>;
 
 ### 3. Create a .env file in the root of the project and paste below instruction in this :
       API_PORT=9001
