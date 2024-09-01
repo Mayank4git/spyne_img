@@ -69,7 +69,7 @@ class UploadFileController {
                             let image = await Jimp.read(imageBuffer);
                             let outputFilePath = await new Promise((resolve, reject) => {
                                 image.resize(Jimp.AUTO, 800)
-                                    .quality(80)
+                                    .quality(50)
                                     .getBuffer(Jimp.MIME_JPEG, (err, buffer) => {
                                         if (err) return reject(err);
                                         let originalFilename = path.basename(url);
@@ -119,12 +119,14 @@ class UploadFileController {
         if(status == CSV_SUCCESS){
             resultData.status = "200";
             resultData.mssg = "Successfull";
-            return res.status(400).send(resultData);
+            let finaldata = await this.UploadFileModelObj.getProcessingData(requestBody);
+            resultData.data = finaldata;
+            return res.status(200).send(resultData);
 
         }else if(status == CSV_FAILURE || status ==  null){
             resultData.status = "200";
             resultData.mssg = "Failure or no record exists.";
-            return res.status(400).send(resultData);
+            return res.status(200).send(resultData);
         }
     }
 
