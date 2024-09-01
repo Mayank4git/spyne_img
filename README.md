@@ -32,4 +32,28 @@ git clone https://github.com/your-username/your-repo-name.git
       DB_PORT=your_db_port
 
 ### 4. Set Up the MySQL Database
-      i have provided required database and table schema in this project check spyne_db_schema.sql
+      CREATE TABLE csv_processing_requests (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id VARCHAR(255) NOT NULL UNIQUE,
+    file_name VARCHAR(255) NOT NULL
+    status TINYINT NOT NULL DEFAULT 0 COMMENT '0=>processing, 1=>success, 2=>failed',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE csv_products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    request_id VARCHAR(255) NOT NULL,
+    product_name VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE csv_product_images (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT NOT NULL,
+    product_image_url VARCHAR(255) NOT NULL,
+    product_compressed_image_url VARCHAR(255) DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
