@@ -22,7 +22,14 @@ git clone https://github.com/your-username/your-repo-name.git
 
 ### 2. Install Dependencies
 
-### 3. Create a .env file in the root of the project.
+### 3. Create a .env file in the root of the project and paste below instruction in this :
+      API_PORT=9001
+
+      DB_HOST=your_db_name
+      DB_USER=your_db_user
+      DB_PASSWORD=your_db_password
+      DB_NAME=your_db_name
+      DB_PORT=your_db_port
 
 ### 4. Set Up the MySQL Database
       i have provided required database and table schema in this project check spyne_db_schema.sql
