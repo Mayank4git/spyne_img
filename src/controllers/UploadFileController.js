@@ -69,7 +69,7 @@ class UploadFileController {
                                         let outputDir = path.join(root, "src/uploads/compressedImages/");
                                         let outputFilePath = path.join(outputDir, compressedFilename);
                                         fs.writeFileSync(outputFilePath, buffer);
-                                        storedPath = `${req.protocol}://${req.get('host')}/src/uploads/compressedImages/${compressedFilename}`;
+                                        storedPath = `${req.protocol}://${req.get('host')}/uploads/compressedImages/${compressedFilename}`;
                                         resolve(storedPath);
                                     });
                             });
@@ -93,8 +93,10 @@ class UploadFileController {
         }
     }
 
+
     handleFileUpload () {
         return upload.any();
     }
 }
 module.exports = UploadFileController;
+
