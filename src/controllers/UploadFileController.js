@@ -102,6 +102,32 @@ class UploadFileController {
         }
     }
 
+    /**
+    * upload csv file by code
+    * @method UploadCSVFile
+    * @return object
+    */
+    async checkCSVStatus(req, res){
+        let requestBody = req.body.request_id;
+        let resultData = {};
+        if(requestBody == "" || requestBody == undefined){
+            resultData.status = "400";
+            resultData.mssg = "Please provide request_id.";
+            return res.status(400).send(resultData);
+        }
+        let status = await this.UploadFileModelObj.checkProcessingStatus(requestBody);
+        if(status == CSV_SUCCESS){
+            resultData.status = "200";
+            resultData.mssg = "Successfull";
+            return res.status(400).send(resultData);
+
+        }else if(status == CSV_FAILURE || status ==  null){
+            resultData.status = "200";
+            resultData.mssg = "Failure or no record exists.";
+            return res.status(400).send(resultData);
+        }
+    }
+
 
     handleFileUpload () {
         return upload.any();
