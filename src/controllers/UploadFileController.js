@@ -47,6 +47,7 @@ class UploadFileController {
                 try {
                   for (const row of results) {
                     let insertedProductId = await this.UploadFileModelObj.insertIntoProductTable(requestId,row[1]);
+                    var storedPath = "";
                     if(insertedProductId){
                         const urls = row[2].split(',');
                         for (let url of urls) {
@@ -63,12 +64,16 @@ class UploadFileController {
                                         let originalFilename = path.basename(url);
                                         let compressedFilename = 'comp-' + Date.now() + "-" + originalFilename;
                                         let root = path.dirname(require.main.filename);
-                                        let outputFilePath = path.join(root, "/src/uploads/compressedImages/", compressedFilename);
+
+                                        // Save to /src/uploads/compressed/
+                                        let outputDir = path.join(root, "src/uploads/compressedImages/");
+                                        let outputFilePath = path.join(outputDir, compressedFilename);
                                         fs.writeFileSync(outputFilePath, buffer);
-                                        resolve(outputFilePath);
+                                        storedPath = `${req.protocol}://${req.get('host')}/src/uploads/compressedImages/${compressedFilename}`;
+                                        resolve(storedPath);
                                     });
                             });
-                            let insertedProductRow = await this.UploadFileModelObj.insertIntoProductImages(insertedProductId, url.trim(), outputFilePath);
+                            let insertedProductRow = await this.UploadFileModelObj.insertIntoProductImages(insertedProductId, url.trim(), storedPath);
                         }
                     }
                 }
@@ -88,10 +93,8 @@ class UploadFileController {
         }
     }
 
-
     handleFileUpload () {
         return upload.any();
     }
 }
 module.exports = UploadFileController;
-
